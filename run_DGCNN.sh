@@ -83,22 +83,23 @@ if [ ${fold} == 0 ]; then
   start=`date +%s`
   for i in $(seq 1 10)
   do
+    mkfifo pipe
+    grep --line-buffered -v '^loss:' < pipe | tee -a outputs/${DATA}_output.txt &
     CUDA_VISIBLE_DEVICES=${GPU} ${PYTHON_CMD} main.py \
-        -seed 1 \
-        -data $DATA \
-        -fold $i \
-        -learning_rate $learning_rate \
-        -num_epochs $num_epochs \
-        -hidden $n_hidden \
-        -latent_dim $CONV_SIZE \
-        -sortpooling_k $sortpooling_k \
-        -out_dim $FP_LEN \
-        -batch_size $bsize \
-        -gm $gm \
-        -mode $gpu_or_cpu \
-        -dropout $dropout > temp.txt
-
-    grep -v '^loss:' temp.txt | tee -a outputs/${DATA}_output.txt
+            -seed 1 \
+            -data $DATA \
+            -fold $i \
+            -learning_rate $learning_rate \
+            -num_epochs $num_epochs \
+            -hidden $n_hidden \
+            -latent_dim $CONV_SIZE \
+            -sortpooling_k $sortpooling_k \
+            -out_dim $FP_LEN \
+            -batch_size $bsize \
+            -gm $gm \
+            -mode $gpu_or_cpu \
+            -dropout $dropout > pipe
+    rm pipe
   done
   stop=`date +%s`
   echo "End of cross-validation"
@@ -124,5 +125,3 @@ else
       -dropout $dropout \
       -test_number ${test_number}
 fi
-
-rm temp.txt
