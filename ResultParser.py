@@ -191,7 +191,7 @@ class ResultParser:
         )
 
         # Adding titles, labels, and legend
-        plt.title(f"{metric} per fold and average {metric} for {split} set")
+        plt.title(f"{metric} per fold and average {metric} for {split} set of {self.dataset}")
         plt.xlabel("Epoch")
         plt.ylabel(metric)
         plt.legend(bbox_to_anchor=(1.05, 1), loc="upper left")
@@ -226,8 +226,23 @@ class ResultParser:
             color="green",
         )
 
-        plt.title(f"Comparison of average {metric} for train and test set")
+        plt.title(f"Comparison of average {metric} for train and test set of {self.dataset}")
         plt.xlabel("Epoch")
         plt.ylabel(metric)
         plt.legend()
         plt.show()
+
+    def display_basic_metrics(self):
+        print(f"Result for dataset {self.dataset} calculated with batch size {self.batch_size}")
+        print()
+        print(f"Last epoch accuracy for every fold on train set: {self.last_epoch_acc(split='train')}")
+        print(f"Last epoch accuracy for every fold on test set: {self.last_epoch_acc(split='test')}")
+        print()
+        print(f"Best epoch accuracy for every fold on train set: {self.best_epoch_acc(split='train')}")
+        print(f"Best epoch accuracy for every fold on test set: {self.best_epoch_acc(split='test')}")
+        print()
+        print(f"Average last epoch accuracy on train set: {self.avg_last_epoch_acc(split='train')}")
+        print(f"Average last epoch accuracy on test set: {self.avg_last_epoch_acc(split='test')}")
+        print()
+        print(f"Average best epoch accuracy on train set: {self.avg_best_epoch_acc(split='train')}")
+        print(f"Average best epoch accuracy on test set: {self.avg_best_epoch_acc(split='test')}")
