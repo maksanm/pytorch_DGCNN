@@ -102,7 +102,7 @@ class ResultParser:
 
         return dataset, bsz, data
 
-    def last_epoch_acc(self, split: str):
+    def fold_acc(self, split: str):
         """
         split can be 'train' or 'test'
         Returns a list of last epoch accuracy for every fold
@@ -113,29 +113,19 @@ class ResultParser:
 
         return result
 
-    def best_epoch_acc(self, split: str):
-        """
-        Returns a list of best epoch accuracy for every fold
-        """
-        result = []
-        for _, results in self.results.items():
-            result.append(max(results[f"{split}_accuracy"]))
-
-        return result
-
-    def avg_last_epoch_acc(self, split: str):
+    def avg_acc(self, split: str):
         """
         Avg accuracy from last epoch of every fold
         """
-        last_epoch_acc = self.last_epoch_acc(split)
+        last_epoch_acc = self.fold_acc(split)
         return np.mean(last_epoch_acc)
-
-    def avg_best_epoch_acc(self, split: str):
+    
+    def std_acc(self, split: str):
         """
-        Avg accuracy from best epoch of every fold
+        Avg accuracy from last epoch of every fold
         """
-        best_epoch_acc = self.best_epoch_acc(split)
-        return np.mean(best_epoch_acc)
+        last_epoch_acc = self.fold_acc(split)
+        return np.std(last_epoch_acc)
 
     def get_metric_arrays(self, split: str, metric: str):
         """
@@ -235,14 +225,10 @@ class ResultParser:
     def display_basic_metrics(self):
         print(f"Result for dataset {self.dataset} calculated with batch size {self.batch_size}")
         print()
-        print(f"Last epoch accuracy for every fold on train set: {self.last_epoch_acc(split='train')}")
-        print(f"Last epoch accuracy for every fold on test set: {self.last_epoch_acc(split='test')}")
+        print(f"Last epoch accuracy for every fold on train set: {self.fold_acc(split='train')}")
+        print(f"Last epoch accuracy for every fold on test set: {self.fold_acc(split='test')}")
         print()
-        print(f"Best epoch accuracy for every fold on train set: {self.best_epoch_acc(split='train')}")
-        print(f"Best epoch accuracy for every fold on test set: {self.best_epoch_acc(split='test')}")
-        print()
-        print(f"Average last epoch accuracy on train set: {self.avg_last_epoch_acc(split='train')}")
-        print(f"Average last epoch accuracy on test set: {self.avg_last_epoch_acc(split='test')}")
-        print()
-        print(f"Average best epoch accuracy on train set: {self.avg_best_epoch_acc(split='train')}")
-        print(f"Average best epoch accuracy on test set: {self.avg_best_epoch_acc(split='test')}")
+        print(f"Average last epoch accuracy on train set: {self.avg_acc(split='train')}")
+        print(f"Last epoch accuracy std on train set: {self.std_acc(split='train')}")
+        print(f"Average last epoch accuracy on test set: {self.avg_acc(split='test')}")
+        print(f"Last epoch accuracy std on test set: {self.std_acc(split='test')}")
