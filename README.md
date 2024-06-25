@@ -4,9 +4,8 @@ PyTorch DGCNN
 About
 -----
 
-PyTorch implementation of DGCNN (Deep Graph Convolutional Neural Network). Check https://github.com/muhanzhang/DGCNN for more information.
+Adjusted fork of the PyTorch implementation of DGCNN (Deep Graph Convolutional Neural Network). Check https://github.com/muhanzhang/DGCNN for more information.
 
-Requirements: python 2.7 or python 3.6; pytorch >= 0.4.0
 
 Installation
 ------------
@@ -21,21 +20,11 @@ After that, under the root directory of this repository, type
 
     ./run_DGCNN.sh
 
-to run DGCNN on dataset MUTAG with the default setting.
+to run DGCNN on dataset MUTAG with the default setting, or type 
 
-Or type 
+    ./run_DGCNN.sh $DATASET_NAME $bsize
 
-    ./run_DGCNN.sh DATANAME FOLD
-
-to run on dataset = DATANAME using fold number = FOLD (1-10, corresponds to which fold to use as test data in the cross-validation experiments).
-
-If you set FOLD = 0, e.g., typing "./run_DGCNN.sh DD 0", then it will run 10-fold cross validation on DD and report the average accuracy.
-
-Alternatively, type
-
-    ./run_DGCNN.sh DATANAME 1 200
-
-to use the last 200 graphs in the dataset as testing graphs. The fold number 1 will be ignored.
+to run 10-fold cross-validation on dataset = `$DATASET_NAME` using batch size = `$bsize`.
 
 Check "run_DGCNN.sh" for more options.
 
@@ -53,21 +42,4 @@ How to use your own data
 
 The first step is to transform your graphs to the format described in "data/README.md". You should put your testing graphs at the end of the file. Then, there is an option -test_number X, which enables using the last X graphs from the file as testing graphs. You may also pass X as the third argument to "run_DGCNN.sh" by
 
-    ./run_DGCNN.sh DATANAME 1 X
-
-where the fold number 1 will be ignored.
-
-Reference
----------
-
-If you find the code useful, please cite our paper:
-
-    @inproceedings{zhang2018end,
-      title={An End-to-End Deep Learning Architecture for Graph Classification.},
-      author={Zhang, Muhan and Cui, Zhicheng and Neumann, Marion and Chen, Yixin},
-      booktitle={AAAI},
-      year={2018}
-    }
-
-Muhan Zhang, muhan@wustl.edu
-3/19/2018
+    ./run_DGCNN.sh $DATASET_NAME $bsize
